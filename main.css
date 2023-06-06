@@ -1,0 +1,107 @@
+html, body {
+    --mainFontColor: #abc;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    background: #123;
+    color: var(--mainFontColor);
+    font-family: monospace;
+}
+
+ul {
+    list-style: none;
+}
+
+figure {
+    margin: 0;
+    position: relative;
+}
+
+.productImage {
+    position: relative;
+}
+
+.duppedImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: blur(8px);
+    opacity: .8;
+}
+
+.layoutSwitch {
+    display: none;
+}
+
+.layoutSwitchContainer {
+    position: absolute;
+    right: 0;
+}
+.layoutSwitchContainer label {
+    padding: 8px 16px;
+    cursor: pointer;
+    background: black;
+}
+
+#gridLayoutSwitch:checked ~ .layoutSwitchContainer label[for="gridLayoutSwitch"],
+#listLayoutSwitch:checked ~ .layoutSwitchContainer label[for="listLayoutSwitch"] {
+    filter: invert();
+}
+
+.productsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+#listLayoutSwitch:checked ~ .productsContainer li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#listLayoutSwitch:checked ~ .productsContainer .productDescription {
+    flex-grow: 1;
+    padding: 0 16px;
+}
+
+#gridLayoutSwitch:checked ~ .productsContainer {
+    grid-template: repeat(4, 1fr) / repeat(2, 1fr);
+    display: grid;
+}
+
+.price {
+    padding: 0 16px;
+}
+
+.productFilter {
+    background: transparent;
+    border: none;
+    box-shadow: 0 0 4px 1px beige;
+    margin: 0 16px;
+    padding: 8px;
+    color: var(--mainFontColor);
+}
+
+header > h1 {
+    z-index: 1;
+    position: relative;
+    padding: 0 8px;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    width: 100vw;
+    height: 128px;
+    background: #a2a;
+    filter: blur(256px);
+    transform: translate(-50%, -75%);
+    animation: blurMotion 4s alternate infinite cubic-bezier(.5,0,0,1);
+}
+
+@keyframes blurMotion {
+    25% { transform: translate(-50%, -75%); }
+    to { transform: translate(25%, -50%); }
+}
