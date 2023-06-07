@@ -109,7 +109,7 @@
 
     Object.assign(window, {
         renderList: (title, list) => {
-            resultContainer.appendChild(getStepResult(title, list))
+            resultContainer.insertAdjacentElement('afterbegin', getStepResult(title, list))
         }
     })
 })()

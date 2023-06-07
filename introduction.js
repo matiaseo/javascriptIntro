@@ -32,7 +32,7 @@ const allCats = cats.concat(predefinedCats)
 renderList("All cats", allCats)
 
 // filter
-const olderCats = allCats.filter(({age}) => age > 15)
+const olderCats = allCats.filter(({age}) => age > 20)
 renderList("Filter older cats", olderCats)
 
 // every
