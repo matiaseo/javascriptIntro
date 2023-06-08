@@ -29,7 +29,7 @@
         const figcaption = Object.assign(document.createElement('figcaption'), {
             textContent: name
         })
-        figcaption.style.setProperty('--imageWidth', `96px`)
+        figcaption.style.setProperty('--imageWidth', `128px`)
         const breedSpan = Object.assign(document.createElement('span'), {
             textContent: 'Breed: '
         })
@@ -110,6 +110,9 @@
     Object.assign(window, {
         renderList: (title, list) => {
             resultContainer.insertAdjacentElement('afterbegin', getStepResult(title, list))
+        },
+        renderCat: (title, cat) => {
+            resultContainer.insertAdjacentElement('afterbegin', getStepResult(title, [cat]))
         }
     })
 })()

@@ -60,7 +60,7 @@ figure,
 .stepResultListContainer {
     grid-template: repeat(1, 1fr) / repeat(4, 1fr);
     display: grid;
-    gap: 4px;
+    gap: 8px;
     padding: 0 8px;
 }
 .catCard {
@@ -68,11 +68,12 @@ figure,
     --cardColor: #4564;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     box-shadow: 0 0 4px 1px inset var(--cardShadowColor);
     background: var(--cardColor);
     padding: 6px;
     gap: 2px;
-    width: 256px;
+    width: 140px;
 }
 
 .stepResultTitle {
