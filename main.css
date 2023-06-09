@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     --mainFontColor: #abc;
     width: 100%;
     height: 100%;
@@ -8,14 +9,17 @@ html, body {
     color: var(--mainFontColor);
     font-family: monospace;
 }
+
 html {
     overflow: hidden;
 }
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 ul {
     list-style: none;
 }
@@ -29,6 +33,7 @@ figcaption {
     font-weight: bolder;
     backdrop-filter: brightness(0.3);
 }
+
 figcaption::first-letter {
     text-transform: capitalize;
 }
@@ -51,19 +56,35 @@ figure,
     flex-direction: column;
     gap: 32px;
 }
+
 .stepResultSectionContainer {
     box-shadow: 0 2px 2px 0 #abca inset;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
+
 .stepResultListContainer {
     grid-template: repeat(1, 1fr) / repeat(4, 1fr);
     display: grid;
-    gap: 8px;
+    gap: 30px;
     padding: 0 8px;
 }
+
+.gridElement {
+    justify-self: center;
+}
+
 .catCard {
+    transition: all 250ms ease-out;
+    margin: 4px;
+    transform: scale(1);
+    height: 100%;
+    perspective: 200px;
+}
+
+.catCardBody {
+    pointer-events: none;
     --cardShadowColor: #456;
     --cardColor: #4564;
     display: flex;
@@ -74,6 +95,12 @@ figure,
     padding: 6px;
     gap: 2px;
     width: 140px;
+    height: 100%;
+    z-index: 0;
+}
+
+.catCard:hover {
+    transform: scale(1.3);
 }
 
 .stepResultTitle {
@@ -88,6 +115,7 @@ figure,
     gap: 4px;
     flex-flow: row wrap;
 }
+
 .quietTraitPill,
 .annoyingTraitPill {
     border-radius: 8px;
@@ -98,6 +126,7 @@ figure,
     background: #3866;
     border: #386 solid 1px;
 }
+
 .annoyingTraitPill {
     background: #b246;
     border: #b24 solid 1px;
@@ -108,9 +137,11 @@ figure,
     display: flex;
     flex-direction: column;
 }
+
 .noContent span:first-child {
     order: -1;
 }
+
 .noContent::before {
     content: "";
     background-image: url(./noContent.png);
@@ -122,7 +153,7 @@ figure,
 
 
 
-ul:nth-of-type(odd)> .stepResultTitle::before {
+ul:nth-of-type(odd)>.stepResultTitle::before {
     content: "";
     position: absolute;
     width: 100vw;
@@ -130,11 +161,16 @@ ul:nth-of-type(odd)> .stepResultTitle::before {
     background: #a2a;
     filter: blur(256px);
     transform: translate(-50%, -75%);
-    animation: blurMotion 6s alternate infinite cubic-bezier(.5,0,0,1);
+    animation: blurMotion 6s alternate infinite cubic-bezier(.5, 0, 0, 1);
     opacity: .75;
 }
 
 @keyframes blurMotion {
-    25% { transform: translate(-50%, -75%); }
-    to { transform: translate(25%, 0); }
+    25% {
+        transform: translate(-50%, -75%);
+    }
+
+    to {
+        transform: translate(25%, 0);
+    }
 }

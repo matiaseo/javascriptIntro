@@ -1,4 +1,20 @@
-;(() => {
+; (() => {
+
+    function map(val, minA, maxA, minB, maxB) {
+        return minB + ((val - minA) * (maxB - minB)) / (maxA - minA);
+    }
+
+    function catCard3D(card, ev) {
+        let mouseX = ev.offsetX;
+        let mouseY = ev.offsetY;
+        let rotateY = map(mouseX, 0, 180, -25, 25);
+        let rotateX = map(mouseY, 0, 250, 25, -25);
+        let brightness = map(mouseY, 0, 250, 1.5, 0.5);
+
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.filter = `brightness(${brightness})`;
+    }
+
     const resultContainer = document.querySelector('.resultContainer')
 
     const toTraitPill = ({ name, type }) => {
@@ -10,11 +26,18 @@
 
     const toCatCard = ({ name, picture, breed, age, size, traits, cardColor }) => {
         const li = Object.assign(document.createElement('li'), {
+            className: 'gridElement'
+        })
+
+        const catCard = Object.assign(document.createElement('div'), {
             className: 'catCard'
         })
-        if(cardColor) {
-            li.style.setProperty('--cardColor', cardColor+'4')
-            li.style.setProperty('--cardShadowColor', cardColor)
+        const catCardBody = Object.assign(document.createElement('div'), {
+            className: 'catCardBody'
+        })
+        if (cardColor) {
+            catCardBody.style.setProperty('--cardColor', cardColor + '4')
+            catCardBody.style.setProperty('--cardShadowColor', cardColor)
         }
 
         const figure = document.createElement('figure')
@@ -55,17 +78,28 @@
         traits.map(toTraitPill)
             .forEach(traitPill => traitsContainer.appendChild(traitPill))
 
+        li.addEventListener('mousemove', (ev) => {
+            catCard3D(li, ev);
+        });
+
+        li.addEventListener('mouseleave', (ev) => {
+            li.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            li.style.filter = 'brightness(1)';
+        });
+
         figure.appendChild(duppedImage)
         figure.appendChild(img)
         figure.appendChild(figcaption)
         breedSpan.appendChild(breedB)
         ageSpan.appendChild(ageB)
         sizeSpan.appendChild(sizeB)
-        li.appendChild(figure)
-        li.appendChild(breedSpan)
-        li.appendChild(ageSpan)
-        li.appendChild(sizeSpan)
-        li.appendChild(traitsContainer)
+        catCardBody.appendChild(figure)
+        catCardBody.appendChild(breedSpan)
+        catCardBody.appendChild(ageSpan)
+        catCardBody.appendChild(sizeSpan)
+        catCardBody.appendChild(traitsContainer)
+        catCard.append(catCardBody)
+        li.appendChild(catCard)
         return li
     }
 
@@ -99,13 +133,15 @@
         list.map(toCatCard)
             .forEach(catCard => stepResultListContainer.appendChild(catCard))
 
-        if(!list?.length) {
+        if (!list?.length) {
             li.appendChild(getNoContentElement())
         } else {
             li.appendChild(stepResultListContainer)
         }
         return li
     }
+
+
 
     Object.assign(window, {
         renderList: (title, list) => {
