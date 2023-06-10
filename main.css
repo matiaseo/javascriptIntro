@@ -86,7 +86,6 @@ figure,
     width: 140px;
     height: 100%;
     transition: all .15s ease-out;
-    /* transform: scale(1); */
     perspective: 64px;
 }
 

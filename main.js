@@ -29,7 +29,7 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor }) => {
         className: 'catCardContainer'
     })
     catCardContainer.addEventListener('mousemove', ({ offsetX: mouseX, offsetY: mouseY }) => {
-        set3DRotationProperties(card, mouseX, mouseY)
+        set3DRotationProperties(catCardContainer, mouseX, mouseY)
     })
 
     const catCard = Object.assign(document.createElement('div'), {
