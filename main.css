@@ -81,9 +81,9 @@ figure,
     justify-content: space-between;
     box-shadow: 0 0 4px 1px inset var(--cardShadowColor);
     background: var(--cardColor);
-    padding: 6px;
+    padding: 8px;
     gap: 2px;
-    width: 140px;
+    width: 142px;
     height: 100%;
     transition: all .15s ease-out;
     perspective: 64px;
