@@ -67,7 +67,7 @@ figure,
 .stepResultListContainer {
     grid-template: repeat(1, 1fr) / repeat(4, 1fr);
     display: grid;
-    gap: 32px;
+    gap: 16px;
     padding: 16px 0;
     justify-items: center;
 }
@@ -85,9 +85,9 @@ figure,
     gap: 2px;
     width: 140px;
     height: 100%;
-    transition: all 100ms ease-out;
-    transform: scale(1);
-    perspective: 200px;
+    transition: all .15s ease-out;
+    /* transform: scale(1); */
+    perspective: 64px;
 }
 
 .catCardContainer {

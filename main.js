@@ -1,27 +1,18 @@
 ;(() => {
 
-const interpolatePosition = (value, minA, maxA, minB, maxB) =>
+const interpolateLinearValue = (value, minA, maxA, minB, maxB) =>
     minB + ((value - minA) * (maxB - minB)) / (maxA - minA)
 
-const set3DRotation = (card, mouseX, mouseY) => {
-    const rotateY = interpolatePosition(mouseX, 0, 180, -25, 25)
-    const rotateX = interpolatePosition(mouseY, 0, 250, 25, -25)
-    const brightness = interpolatePosition(mouseY, 0, 250, 1.5, .9)
+const set3DRotationProperties = (card, mouseX, mouseY) => {
+    const { width, height } = card.getBoundingClientRect()
+    const rotateY = interpolateLinearValue(mouseX, 0, width, -30, 30)
+    const rotateX = interpolateLinearValue(mouseY, 0, height, 30, -30)
+    const brightness = 1.5 - (mouseY-height/2)*(mouseY-height/2)/(height*height/2)
+        - (mouseX-width/2)*(mouseX-width/2)/(width*width/2)
 
     card.style.setProperty('--rotateX', `${rotateX}deg`)
     card.style.setProperty('--rotateY', `${rotateY}deg`)
     card.style.setProperty('--brightness', `${brightness}`)
-}
-
-const add3DEffect = card => {
-    card.addEventListener('mousemove', ({ offsetX: mouseX, offsetY: mouseY }) => {
-        set3DRotation(card, mouseX, mouseY)
-    })
-    card.addEventListener('mouseleave', () => {
-        card.style.setProperty('--rotateX', '0deg')
-        card.style.setProperty('--rotateY', '0deg')
-        card.style.setProperty('--brightness', '1')
-    })
 }
 
 const resultContainer = document.querySelector('.resultContainer')
@@ -36,6 +27,9 @@ const toTraitPill = ({ name, type }) => {
 const toCatCard = ({ name, picture, breed, age, size, traits, cardColor }) => {
     const catCardContainer = Object.assign(document.createElement('li'), {
         className: 'catCardContainer'
+    })
+    catCardContainer.addEventListener('mousemove', ({ offsetX: mouseX, offsetY: mouseY }) => {
+        set3DRotationProperties(card, mouseX, mouseY)
     })
 
     const catCard = Object.assign(document.createElement('div'), {
@@ -83,8 +77,6 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor }) => {
     })
     traits.map(toTraitPill)
         .forEach(traitPill => traitsContainer.appendChild(traitPill))
-
-    add3DEffect(catCardContainer)
 
     figure.appendChild(duppedImage)
     figure.appendChild(img)
