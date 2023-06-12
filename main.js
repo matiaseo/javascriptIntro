@@ -24,7 +24,7 @@ const toTraitPill = ({ name, type }) => {
     })
 }
 
-const toCatCard = ({ name, picture, breed, age, size, traits, cardColor }) => {
+const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted }) => {
     const catCardContainer = Object.assign(document.createElement('li'), {
         className: 'catCardContainer'
     })
@@ -81,6 +81,13 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor }) => {
     figure.appendChild(duppedImage)
     figure.appendChild(img)
     figure.appendChild(figcaption)
+    if(adopted) {
+        const adopted = Object.assign(document.createElement('span'), {
+            textContent: '✓Adopted',
+            className: 'adopted'
+        })
+        figure.appendChild(adopted)
+    }
     breedSpan.appendChild(breedB)
     ageSpan.appendChild(ageB)
     sizeSpan.appendChild(sizeB)

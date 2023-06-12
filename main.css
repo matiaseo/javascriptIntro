@@ -37,6 +37,7 @@ figcaption::first-letter {
 figure,
 .catImage {
     position: relative;
+    overflow: hidden;
 }
 .duppedImage {
     position: absolute;
@@ -44,6 +45,17 @@ figure,
     left: 0;
     filter: blur(8px);
     /* opacity: .8; */
+}
+.adopted {
+    position: absolute;
+    right: -19px;
+    top: 10px;
+    background: #2ff19aad;
+    padding: 2px 16px;
+    color: #1a073c;
+    font-weight: bold;
+    font-size: .8em;
+    transform: rotate(40deg);
 }
 
 .resultContainer {
