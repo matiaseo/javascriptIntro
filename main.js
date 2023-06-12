@@ -39,6 +39,7 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
         catCard.style.setProperty('--cardColor', cardColor + '4')
         catCard.style.setProperty('--cardShadowColor', cardColor)
     }
+    catCard.style.setProperty('--imageWidth', `128px`)
 
     const figure = document.createElement('figure')
     const img = Object.assign(document.createElement('img'), {
@@ -52,7 +53,6 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
     const figcaption = Object.assign(document.createElement('figcaption'), {
         textContent: name
     })
-    figcaption.style.setProperty('--imageWidth', `128px`)
     const breedSpan = Object.assign(document.createElement('span'), {
         textContent: 'Breed: '
     })
@@ -82,11 +82,15 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
     figure.appendChild(img)
     figure.appendChild(figcaption)
     if(adopted) {
+        const adoptedContainer = Object.assign(document.createElement('div'), {
+            className: 'adoptedContainer'
+        })
         const adopted = Object.assign(document.createElement('span'), {
             textContent: '✓Adopted',
             className: 'adopted'
         })
-        figure.appendChild(adopted)
+        adoptedContainer.appendChild(adopted)
+        figure.appendChild(adoptedContainer)
     }
     breedSpan.appendChild(breedB)
     ageSpan.appendChild(ageB)
