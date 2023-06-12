@@ -215,5 +215,4 @@ renderResult('Bonus: Multicolor crazyness', allCats.map(
         cat => ({...cat, cardColor: `#${Math.random().toString(16).slice(2,5)}`}))
     )
 
-
 })()

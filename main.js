@@ -42,45 +42,45 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
     catCard.style.setProperty('--imageWidth', `128px`)
 
     const figure = document.createElement('figure')
-    const img = Object.assign(document.createElement('img'), {
+    const img = picture && Object.assign(document.createElement('img'), {
         src: picture,
         className: 'catImage'
     })
-    const duppedImage = Object.assign(document.createElement('img'), {
+    const duppedImage = picture && Object.assign(document.createElement('img'), {
         src: picture,
         className: 'duppedImage'
     })
-    const figcaption = Object.assign(document.createElement('figcaption'), {
+    const figcaption = name && Object.assign(document.createElement('figcaption'), {
         textContent: name
     })
-    const breedSpan = Object.assign(document.createElement('span'), {
+    const breedSpan = breed && Object.assign(document.createElement('span'), {
         textContent: 'Breed: '
     })
-    const breedB = Object.assign(document.createElement('b'), {
+    const breedB = breed && Object.assign(document.createElement('b'), {
         textContent: breed
     })
-    const ageSpan = Object.assign(document.createElement('span'), {
+    const ageSpan = age && Object.assign(document.createElement('span'), {
         textContent: 'Age: '
     })
-    const ageB = Object.assign(document.createElement('b'), {
+    const ageB = age && Object.assign(document.createElement('b'), {
         textContent: age
     })
-    const sizeSpan = Object.assign(document.createElement('span'), {
+    const sizeSpan = size && Object.assign(document.createElement('span'), {
         textContent: 'Size: '
     })
-    const sizeB = Object.assign(document.createElement('b'), {
+    const sizeB = size && Object.assign(document.createElement('b'), {
         textContent: size
     })
 
     const traitsContainer = Object.assign(document.createElement('div'), {
         className: 'traitsContainer'
     })
-    traits.map(toTraitPill)
+    ;[].concat(traits || []).map(toTraitPill)
         .forEach(traitPill => traitsContainer.appendChild(traitPill))
 
-    figure.appendChild(duppedImage)
-    figure.appendChild(img)
-    figure.appendChild(figcaption)
+    if(picture) figure.appendChild(duppedImage)
+    if(picture) figure.appendChild(img)
+    if(name) figure.appendChild(figcaption)
     if(adopted) {
         const adoptedContainer = Object.assign(document.createElement('div'), {
             className: 'adoptedContainer'
@@ -96,9 +96,9 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
     ageSpan.appendChild(ageB)
     sizeSpan.appendChild(sizeB)
     catCard.appendChild(figure)
-    catCard.appendChild(breedSpan)
-    catCard.appendChild(ageSpan)
-    catCard.appendChild(sizeSpan)
+    if(breed) catCard.appendChild(breedSpan)
+    if(age) catCard.appendChild(ageSpan)
+    if(size) catCard.appendChild(sizeSpan)
     catCard.appendChild(traitsContainer)
     catCardContainer.appendChild(catCard)
     return catCardContainer
@@ -140,14 +140,18 @@ const getStepResult = (title, result) => {
     })
     stepContainer.appendChild(titleElement)
 
-    if(/string|number/.test(typeof result)) {
-        stepContainer.appendChild(getTextResult(result))
-    } else if(!([].concat(result || []))?.length) {
-        stepContainer.appendChild(getNoContentElement())
-    } else {
-        [].concat(result || []).map(toCatCard)
+    try {
+        if(/string|number|boolean/.test(typeof result)) {
+            stepContainer.appendChild(getTextResult(result))
+        } else if(!([].concat(result || []))?.length) {
+            stepContainer.appendChild(getNoContentElement())
+        } else {
+            [].concat(result || []).map(toCatCard)
             .forEach(catCard => stepResultListContainer.appendChild(catCard))
-        stepContainer.appendChild(stepResultListContainer)
+            stepContainer.appendChild(stepResultListContainer)
+        }
+    } catch {
+        stepContainer.appendChild(getNoContentElement())
     }
 
     return stepContainer
