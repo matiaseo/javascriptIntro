@@ -104,6 +104,14 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
     return catCardContainer
 }
 
+const getTextResult = result => {
+    const span = Object.assign(document.createElement('span'), {
+        textContent: result,
+        className: 'textResult'
+    })
+    return span
+}
+
 const getNoContentElement = () => {
     const container = Object.assign(document.createElement('div'), {
         className: 'noContent'
@@ -119,7 +127,7 @@ const getNoContentElement = () => {
     return container
 }
 
-const getStepResult = (title, list) => {
+const getStepResult = (title, result) => {
     const stepContainer = Object.assign(document.createElement('section'), {
         className: 'stepResultSectionContainer'
     })
@@ -131,11 +139,13 @@ const getStepResult = (title, list) => {
         className: 'stepResultListContainer'
     })
     stepContainer.appendChild(titleElement)
-    
-    if(!list?.length) {
+
+    if(/string|number/.test(typeof result)) {
+        stepContainer.appendChild(getTextResult(result))
+    } else if(!([].concat(result || []))?.length) {
         stepContainer.appendChild(getNoContentElement())
     } else {
-        list.map(toCatCard)
+        [].concat(result || []).map(toCatCard)
             .forEach(catCard => stepResultListContainer.appendChild(catCard))
         stepContainer.appendChild(stepResultListContainer)
     }
@@ -144,8 +154,8 @@ const getStepResult = (title, list) => {
 }
 
 Object.assign(window, {
-    renderResult: (title, list=[]) => {
-        resultContainer.insertAdjacentElement('afterbegin', getStepResult(title, [].concat(list)))
+    renderResult: (title, result=[]) => {
+        resultContainer.insertAdjacentElement('afterbegin', getStepResult(title, result))
     }
 })
 

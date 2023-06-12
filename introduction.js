@@ -184,7 +184,7 @@ renderResult('Top 3 oldest', top3OldestCats)
 const averageAge = allCats.reduce(
         (accumulated, {age}) => accumulated + age
     , 0) / allCats.length
-renderResult(`Average cat age: ${averageAge}`, [])
+renderResult(`Average cat age`, averageAge)
 
 const toCombinedCat = (output, cat) => ({
     ...output,

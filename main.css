@@ -158,6 +158,11 @@ figure {
     height: 102px;
 }
 
+.textResult {
+    font-size: 2em;
+    font-weight: bolder;
+    padding: 0 32px;
+}
 
 
 ul:nth-of-type(odd) > .stepResultTitle::before {
