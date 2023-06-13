@@ -1,26 +1,4 @@
-;(async () => {
-
-async function getAPICats() {
-    const response = await fetch("https://cataas.com/api/cats?&limit=20");
-    return response.json();
-}
-const apiCats = (await getAPICats()).slice(10);
-
-// const getRandomTraits = () => [
-//     { name: Math.random().toString(36).replace(/\.|\d/g, ''), type: ['quiet', 'annoying'][(Math.random() < .5) | 0] },
-//     { name: Math.random().toString(36).replace(/\.|\d/g, ''), type: ['quiet', 'annoying'][(Math.random() < .5) | 0] },
-//     { name: Math.random().toString(36).replace(/\.|\d/g, ''), type: ['quiet', 'annoying'][(Math.random() < .5) | 0] },
-// ].slice(0, Math.round(1 + Math.random() * 2))
-
-// const predefinedCats = Array(10).fill(0).map(() => ({
-//     name: Math.random().toString(36).replace(/\.|\d/g, ''),
-//     breed: Math.random().toString(36).replace(/\.|\d/g, ''),
-//     age: Math.round(Math.random() * 20),
-//     size: Math.random().toString(36).replace(/\.|\d/g, ''),
-//     picture: `https://cataas.com/cat/${apiCats[initCounter++]._id}?width=128&height=96`,
-//     traits: getRandomTraits(),
-//     cardColor: '#' + Math.random().toString(16).slice(2, 5)
-// }))
+;(() => {
 
 const predefinedCats = [
     {
@@ -28,7 +6,7 @@ const predefinedCats = [
         breed: 'Aegean',
         age: 4,
         size: 'Big',
-        picture: `https://cataas.com/cat/${apiCats[0]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/dPKnpfpGVMNgo0v1?width=128&height=96`,
         adopted: true,
         traits: [{ name: 'grumpy', type: 'annoying' }, { name: 'sleepy', type: 'quiet' }, { name: 'fancy', type: 'quiet' }],
     },
@@ -37,7 +15,7 @@ const predefinedCats = [
         breed: 'European Shorthair',
         age: 10,
         size: 'Large',
-        picture: `https://cataas.com/cat/${apiCats[1]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/dSC4Bs2XLcoYda45?width=128&height=96`,
         adopted: false,
         traits: [{ name: 'energized', type: 'annoying' }, { name: 'fancy', type: 'quiet' }],
     },
@@ -46,7 +24,7 @@ const predefinedCats = [
         breed: 'Balinese',
         age: 9,
         size: 'Small',
-        picture: `https://cataas.com/cat/${apiCats[2]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/g1LZ81LWXJwFA54p?width=128&height=96`,
         adopted: false,
         traits: [{ name: 'energized', type: 'annoying' }, { name: 'fancy', type: 'annoying' }],
     },
@@ -55,7 +33,7 @@ const predefinedCats = [
         breed: 'Egyptian Mau',
         age: 2,
         size: 'Large',
-        picture: `https://cataas.com/cat/${apiCats[4]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/iDrtyTcdOnAsgJzu?width=128&height=96`,
         adopted: true,
         traits: [{ name: 'lazy', type: 'quiet' }, { name: 'sleepy', type: 'quiet' }],
     },
@@ -64,7 +42,7 @@ const predefinedCats = [
         breed: 'Arabian Mau',
         age: 8,
         size: 'Small',
-        picture: `https://cataas.com/cat/${apiCats[5]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/oBeTvAQnCC3uAL0r?width=128&height=96`,
         adopted: true,
         traits: [{ name: 'lazy', type: 'quiet' }, { name: 'sleepy', type: 'quiet' }],
     },
@@ -73,7 +51,7 @@ const predefinedCats = [
         breed: 'Highlander',
         age: 13,
         size: 'Medium',
-        picture: `https://cataas.com/cat/${apiCats[6]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/qGjZXT5LuroIo8B4?width=128&height=96`,
         adopted: false,
         traits: [{ name: 'energized', type: 'annoying' }, { name: 'fancy', type: 'annoying' }, { name: 'prideful', type: 'annoying' }],
     },
@@ -82,7 +60,7 @@ const predefinedCats = [
         breed: 'Persian',
         age: 7,
         size: 'Big',
-        picture: `https://cataas.com/cat/${apiCats[7]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/u1S16RJ8tmhFgJ1J?width=128&height=96`,
         adopted: true,
         traits: [{ name: 'sleepy', type: 'quiet' }, { name: 'fancy', type: 'annoying' }, { name: 'shy', type: 'quiet' }],
     },
@@ -91,7 +69,7 @@ const predefinedCats = [
         breed: 'Ragdoll',
         age: 15,
         size: 'Medium',
-        picture: `https://cataas.com/cat/${apiCats[3]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/v348KFCS15wsn8CH?width=128&height=96`,
         adopted: true,
         traits: [{ name: 'sleepy', type: 'quiet' }, { name: 'shy', type: 'quiet' }, { name: 'grumpy', type: 'annoying' }],
     },
@@ -100,7 +78,7 @@ const predefinedCats = [
         breed: 'Siamese',
         age: 19,
         size: 'Big',
-        picture: `https://cataas.com/cat/${apiCats[8]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/0VlkBO6ValjaoeEw?width=128&height=96`,
         adopted: true,
         traits: [{ name: 'sleepy', type: 'quiet' }, { name: 'energized', type: 'annoying' }],
     },
@@ -109,7 +87,7 @@ const predefinedCats = [
         breed: 'Toyger',
         age: 22,
         size: 'Large',
-        picture: `https://cataas.com/cat/${apiCats[9]._id}?width=128&height=96`,
+        picture: `https://cataas.com/cat/18T0wqXpU3OiGrUb?width=128&height=96`,
         adopted: false,
         traits: [{ name: 'grumpy', type: 'annoying' }, { name: 'prideful', type: 'annoying' }],
     }
