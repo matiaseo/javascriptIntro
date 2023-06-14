@@ -204,6 +204,7 @@ figure {
     max-width: 0;
     max-height: 0;
     filter: saturate(.5);
+    backdrop-filter: sepia(.1);
 }
 #historyToggler:checked ~ .stepResultSectionContainer .previousContainer {
     transform: translateX(0) scaleX(1);
@@ -213,16 +214,16 @@ figure {
 
 .previousContainer::before {
     content: "";
-    height: 100%;
+    height: calc(100% - 4px);
     width: 0px;
     filter: blur(2px);
     position: absolute;
     left: -4px;
-    top: 0;
+    top: -2px;
     border: #81c dotted 4px;
     border-style: dotted;
+    border-radius: 50%;
 }
-
 
 .stepResultMainContainer {
     display: flex;
