@@ -15,8 +15,6 @@ const set3DRotationProperties = (card, mouseX, mouseY) => {
     card.style.setProperty('--brightness', `${brightness}`)
 }
 
-const resultContainer = document.querySelector('.resultContainer')
-
 const toTraitPill = ({ name, type }) => {
     return Object.assign(document.createElement('span'), {
         textContent: name,
@@ -127,7 +125,26 @@ const getNoContentElement = () => {
     return container
 }
 
-const getStepResult = (title, result) => {
+const getStepResultContent = result => {
+    try {
+        if(/string|number|boolean/.test(typeof result)) {
+            return getTextResult(result)
+        } else if(!([].concat(result || []))?.length) {
+            return getNoContentElement()
+        } else {
+            const stepResultListContainer = Object.assign(document.createElement('ul'), {
+                className: 'stepResultListContainer'
+            })
+            ;[].concat(result || []).map(toCatCard)
+                .forEach(catCard => stepResultListContainer.appendChild(catCard))
+            return stepResultListContainer
+        }
+    } catch {
+        return getNoContentElement()
+    }
+}
+
+const getStepResult = (title, result, previous) => {
     const stepContainer = Object.assign(document.createElement('section'), {
         className: 'stepResultSectionContainer'
     })
@@ -135,31 +152,36 @@ const getStepResult = (title, result) => {
         textContent: title,
         className: 'stepResultTitle'
     })
-    const stepResultListContainer = Object.assign(document.createElement('ul'), {
-        className: 'stepResultListContainer'
+    const stepResultMainContainer = Object.assign(document.createElement('main'), {
+        className: 'stepResultMainContainer'
     })
+    
+    const previousContainer = Object.assign(document.createElement('div'), {
+        className: 'previousContainer'
+    })
+    const currentContainer = Object.assign(document.createElement('div'), {
+        className: 'currentContainer'
+    })
+
     stepContainer.appendChild(titleElement)
 
-    try {
-        if(/string|number|boolean/.test(typeof result)) {
-            stepContainer.appendChild(getTextResult(result))
-        } else if(!([].concat(result || []))?.length) {
-            stepContainer.appendChild(getNoContentElement())
-        } else {
-            [].concat(result || []).map(toCatCard)
-            .forEach(catCard => stepResultListContainer.appendChild(catCard))
-            stepContainer.appendChild(stepResultListContainer)
-        }
-    } catch {
-        stepContainer.appendChild(getNoContentElement())
-    }
+    stepResultMainContainer.appendChild(currentContainer)
+    currentContainer.appendChild(getStepResultContent(result))
+
+    stepResultMainContainer.appendChild(previousContainer)
+    previousContainer.appendChild(getStepResultContent(previous))
+
+    stepContainer.appendChild(stepResultMainContainer)
+    previousContainer.classList.add('animated')
 
     return stepContainer
 }
 
+const resultContainer = document.querySelector('.resultContainer')
+
 Object.assign(window, {
-    renderResult: (title, result=[]) => {
-        resultContainer.insertAdjacentElement('afterbegin', getStepResult(title, result))
+    renderResult: (title, result=[], previous=[]) => {
+        resultContainer.insertBefore(getStepResult(title, result, previous), document.querySelector('.stepResultSectionContainer,.historyTogglerLabel'))
     }
 })
 

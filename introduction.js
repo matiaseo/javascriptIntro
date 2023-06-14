@@ -94,7 +94,7 @@ const predefinedCats = [
 ]
 const cats = [{
     name: 'Raiz',
-    breed: 'black',
+    breed: 'Siamese',
     age: 1,
     size: 'Large',
     adopted: true,
@@ -109,27 +109,27 @@ renderResult("First cat", cats)
 
 // concat
 const allCats = cats.concat(predefinedCats)
-renderResult("All cats, using concat()", allCats)
+renderResult("All cats, using concat()", allCats, cats)
 
 const youngerCats = allCats.filter(({age}) => age < 5)
-renderResult("Filter younger cats", youngerCats)
+renderResult("Filter younger cats", youngerCats, allCats)
 
 // every
 const quietCats = allCats.filter(({traits}) => traits.every(({ type }) => type === 'quiet'))
-renderResult("Filter cats with all quiet traits", quietCats)
+renderResult("Filter cats with all quiet traits", quietCats, allCats)
 
 // some
 const atLeastOneQuiet = allCats.filter(({traits}) => traits.some(({ type }) => type === 'quiet'))
-renderResult("Filter cats with at least one quiet trait", atLeastOneQuiet)
+renderResult("Filter cats with at least one quiet trait", atLeastOneQuiet, allCats)
 
 // find
 const raiz = allCats.find(({name}) => name === 'Raiz')
-renderResult("Find cat by name", [raiz])
+renderResult("Find cat by name", raiz, allCats)
 
-const blackCat = allCats.find(({breed}) => breed === 'black')
-renderResult("Find cat by breed", [blackCat])
+const siamese = allCats.find(({breed}) => breed === 'Siamese')
+renderResult("Find cat by breed", siamese, allCats)
 
-    // find
+// find
 
 const addColorByAge = ({ age, ...otherProperties }) => {
     const cardColor = age <= 2? '#fd6' : age < 9? '#4f7' : '#d7b'
@@ -141,15 +141,15 @@ const addColorByAge = ({ age, ...otherProperties }) => {
 }
 
 const colorCodedCats = allCats.map(addColorByAge)
-renderResult('Color-coded by age', colorCodedCats)
+renderResult('Color-coded by age', colorCodedCats, allCats)
 
 const renamedCats = colorCodedCats.map(cat => ({...cat, name: 'Garfield'}))
-renderResult('All Garfield cats', renamedCats)
+renderResult('All Garfield cats', renamedCats, colorCodedCats)
 
 // sort
 const sortByAge = ({ age: age1 }, { age: age2 }) => age1 - age2
 const sortedCats = colorCodedCats.slice().sort(sortByAge)
-renderResult('Cats sorted by Age', sortedCats)
+renderResult('Cats sorted by Age', sortedCats, colorCodedCats)
 
 // slice
 const top3YoungestCats = sortedCats.slice(0, 3)
@@ -174,7 +174,7 @@ const toCombinedCat = (output, cat) => ({
 })
 const combinedCat = colorCodedCats.reduce(toCombinedCat)
 
-renderResult('Combined super-cat', combinedCat)
+renderResult('Combined super-cat', combinedCat, colorCodedCats)
 
 // Array.from Set
 const getUniqueTraits = traits => {
@@ -186,11 +186,11 @@ const deduplicatedCombinedCat = {
     traits: getUniqueTraits(combinedCat.traits)
 }
 
-renderResult('Combined super-cat without duplicated traits', deduplicatedCombinedCat)
+renderResult('Combined super-cat without duplicated traits', deduplicatedCombinedCat, combinedCat)
 
 
 renderResult('Bonus: Multicolor crazyness', allCats.map(
         cat => ({...cat, cardColor: `#${Math.random().toString(16).slice(2,5)}`}))
-    )
+    , allCats)
 
 })()

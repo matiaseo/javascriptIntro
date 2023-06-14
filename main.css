@@ -71,7 +71,7 @@ figure {
 .resultContainer {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    /* gap: 32px; */
 }
 
 .stepResultSectionContainer {
@@ -163,6 +163,75 @@ figure {
     font-weight: bolder;
     padding: 0 32px;
 }
+
+#historyToggler {
+    display: none
+}
+.historyTogglerLabel::before {
+    content: "<";
+    transition: transform .2s ease-in-out;
+}
+#historyToggler:checked ~ .historyTogglerLabel::before {
+    transform: scaleX(-1);
+}
+.historyTogglerLabel {
+    position: fixed;
+    top: 0;
+    right: 16px;
+    backdrop-filter: grayscale(1);
+    padding: 0 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 2px 0 2px 0px inset;
+    font-size: 2em;
+    font-weight: bolder;
+}
+
+.currentContainer {
+    flex-grow: 1;
+}
+#historyToggler:checked ~ .stepResultSectionContainer .stepResultListContainer {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.previousContainer.animated {
+    transition: transform .2s ease-in-out, max-width .2s ease-in-out, max-height .2s ease-in;
+}
+.previousContainer {
+    transform: translateX(100%) scaleX(0);
+    flex-shrink: 1;
+    max-width: 0;
+    max-height: 0;
+    filter: saturate(.5);
+}
+#historyToggler:checked ~ .stepResultSectionContainer .previousContainer {
+    transform: translateX(0) scaleX(1);
+    max-width: 50vw;
+    max-height: 100%;
+}
+
+.previousContainer::before {
+    content: "";
+    height: 100%;
+    width: 0px;
+    filter: blur(2px);
+    position: absolute;
+    left: -4px;
+    top: 0;
+    border: #81c dotted 4px;
+    border-style: dotted;
+}
+
+
+.stepResultMainContainer {
+    display: flex;
+    justify-content: stretch;
+    padding: 0 0 16px 0;
+}
+
+
+
 
 
 ul:nth-of-type(odd) > .stepResultTitle::before {
