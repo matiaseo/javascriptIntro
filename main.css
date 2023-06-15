@@ -201,6 +201,7 @@ figure {
 .previousContainer {
     transform: translateX(100%) scaleX(0);
     flex-shrink: 1;
+    flex-grow: 1;
     max-width: 0;
     max-height: 0;
     filter: saturate(.5);

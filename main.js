@@ -135,7 +135,7 @@ const getStepResultContent = result => {
             const stepResultListContainer = Object.assign(document.createElement('ul'), {
                 className: 'stepResultListContainer'
             })
-            ;[].concat(result || []).map(toCatCard)
+            ;[].concat(result).map(toCatCard)
                 .forEach(catCard => stepResultListContainer.appendChild(catCard))
             return stepResultListContainer
         }
