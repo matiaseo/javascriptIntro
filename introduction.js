@@ -92,7 +92,7 @@ const predefinedCats = [
         traits: [{ name: 'grumpy', type: 'annoying' }, { name: 'prideful', type: 'annoying' }],
     }
 ]
-const cats = [{
+const cat = {
     name: 'Raiz',
     breed: 'Siamese',
     age: 1,
@@ -103,13 +103,13 @@ const cats = [{
         { name: 'sleepy', type: 'quiet' },
         { name: 'grumpy', type: 'annoying' }
     ]
-}]
+}
 
-renderResult("First cat", cats)
+renderResult("First cat", cat)
 
 // concat
-const allCats = cats.concat(predefinedCats)
-renderResult("All cats, using concat()", allCats, cats)
+const allCats = predefinedCats.concat(cat)
+renderResult("All cats, using concat()", allCats, cat)
 
 const youngerCats = allCats.filter(({age}) => age < 5)
 renderResult("Filter younger cats", youngerCats, allCats)
@@ -129,7 +129,10 @@ renderResult("Find cat by name", raiz, allCats)
 const siamese = allCats.find(({breed}) => breed === 'Siamese')
 renderResult("Find cat by breed", siamese, allCats)
 
-// find
+// map
+
+const renamedCats = allCats.map(cat => ({...cat, name: 'Garfield'}))
+renderResult('All Garfield cats', renamedCats, allCats)
 
 const addColorByAge = ({ age, ...otherProperties }) => {
     const cardColor = age <= 2? '#fd6' : age < 9? '#4f7' : '#d7b'
@@ -142,9 +145,6 @@ const addColorByAge = ({ age, ...otherProperties }) => {
 
 const colorCodedCats = allCats.map(addColorByAge)
 renderResult('Color-coded by age', colorCodedCats, allCats)
-
-const renamedCats = colorCodedCats.map(cat => ({...cat, name: 'Garfield'}))
-renderResult('All Garfield cats', renamedCats, colorCodedCats)
 
 // sort
 const sortByAge = ({ age: age1 }, { age: age2 }) => age1 - age2

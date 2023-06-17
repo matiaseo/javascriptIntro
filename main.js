@@ -79,6 +79,7 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
     if(picture) figure.appendChild(duppedImage)
     if(picture) figure.appendChild(img)
     if(name) figure.appendChild(figcaption)
+    catCard.appendChild(figure)
     if(adopted) {
         const adoptedContainer = Object.assign(document.createElement('div'), {
             className: 'adoptedContainer'
@@ -90,13 +91,13 @@ const toCatCard = ({ name, picture, breed, age, size, traits, cardColor, adopted
         adoptedContainer.appendChild(adopted)
         figure.appendChild(adoptedContainer)
     }
-    breedSpan.appendChild(breedB)
-    ageSpan.appendChild(ageB)
-    sizeSpan.appendChild(sizeB)
-    catCard.appendChild(figure)
+    if(breed) breedSpan.appendChild(breedB)
+    if(age) ageSpan.appendChild(ageB)
+    if(size) sizeSpan.appendChild(sizeB)
     if(breed) catCard.appendChild(breedSpan)
     if(age) catCard.appendChild(ageSpan)
     if(size) catCard.appendChild(sizeSpan)
+
     catCard.appendChild(traitsContainer)
     catCardContainer.appendChild(catCard)
     return catCardContainer
