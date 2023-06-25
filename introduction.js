@@ -135,11 +135,11 @@ const renamedCats = allCats.map(cat => ({...cat, name: 'Garfield'}))
 renderResult('All Garfield cats', renamedCats, allCats)
 
 const addColorByAge = ({ age, ...otherProperties }) => {
-    const cardColor = age <= 2? '#fd6' : age < 9? '#4f7' : '#d7b'
+    const cardColor = age <= 2? 'fd6' : age < 9? '4f7' : 'd7b'
     return {
         ...otherProperties,
         age,
-        cardColor
+        cardColor: `#${cardColor}`
     }
 }
 
