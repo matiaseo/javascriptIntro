@@ -8,7 +8,7 @@
 
 // cotizacion-dolar.com.ar
 // Array.from($0.querySelectorAll('tr')).map(({children, rowData=Array.from(children).map(td=>td.textContent)})=>({date:'20'+rowData[0].trim().split('-').reverse().join('-'), buy:+rowData[1].match(/[0-9.]+/)?.[0], sell:+rowData[2].match(/[0-9.]+/)?.[0]})).filter(x=>x.buy)
-const arsusd = [ { date: '2023-06-01', buy: 238.83, sell: 250.13 }, { date: '2023-06-02', buy: 239.56, sell: 250.89 }, { date: '2023-06-05', buy: 241.1, sell: 252.53 }, { date: '2023-06-06', buy: 241.9, sell: 253.37 }, { date: '2023-06-07', buy: 242.31, sell: 254.02 }, { date: '2023-06-08', buy: 242.92, sell: 254.8 }, { date: '2023-06-09', buy: 243.89, sell: 255.73 }, { date: '2023-06-12', buy: 244.96, sell: 257.11 }, { date: '2023-06-13', buy: 245.6, sell: 257.78 }, { date: '2023-06-14', buy: 246.05, sell: 258.27 }, { date: '2023-06-15', buy: 246.98, sell: 259.36 }, { date: '2023-06-16', buy: 247.9, sell: 260.16 }, { date: '2023-06-19', buy: 248.01, sell: 260.25 }, { date: '2023-06-20', buy: 248.01, sell: 260.25 }, { date: '2023-06-21', buy: 250.58, sell: 262.86 }, { date: '2023-06-22', buy: 251.56, sell: 263.87 }, { date: '2023-06-23', buy: 252.21, sell: 264.68 } ]
+const arsusd = [ { date: '2023-06-01', buy: 238.83, sell: 250.13 }, { date: '2023-06-02', buy: 239.56, sell: 250.89 }, { date: '2023-06-03', buy: 239.56, sell: 250.89 }, { date: '2023-06-04', buy: 239.56, sell: 250.89 }, { date: '2023-06-05', buy: 241.1, sell: 252.53 }, { date: '2023-06-06', buy: 241.9, sell: 253.37 }, { date: '2023-06-07', buy: 242.31, sell: 254.02 }, { date: '2023-06-08', buy: 242.92, sell: 254.8 }, { date: '2023-06-09', buy: 243.89, sell: 255.73 }, { date: '2023-06-10', buy: 243.89, sell: 255.73 }, { date: '2023-06-11', buy: 243.89, sell: 255.73 }, { date: '2023-06-12', buy: 244.96, sell: 257.11 }, { date: '2023-06-13', buy: 245.6, sell: 257.78 }, { date: '2023-06-14', buy: 246.05, sell: 258.27 }, { date: '2023-06-15', buy: 246.98, sell: 259.36 }, { date: '2023-06-16', buy: 247.9, sell: 260.16 }, { date: '2023-06-17', buy: 247.9, sell: 260.16 }, { date: '2023-06-18', buy: 247.9, sell: 260.16 }, { date: '2023-06-19', buy: 248.01, sell: 260.25 }, { date: '2023-06-20', buy: 248.01, sell: 260.25 }, { date: '2023-06-21', buy: 250.58, sell: 262.86 }, { date: '2023-06-22', buy: 251.56, sell: 263.87 }, { date: '2023-06-23', buy: 252.21, sell: 264.68 }, { date: '2023-06-24', buy: 252.21, sell: 264.68 }, { date: '2023-06-25', buy: 252.21, sell: 264.68 } ]
 
 // Perspective exported data:
 const [names, asks, bids] = Object.values({
@@ -29,7 +29,7 @@ const mergedData = slicedNames.reduce((output, [name, timestamp, splitName=name.
                 name: splitName,
                 bid: slicedBids[index],
                 ask: slicedAsks[index],
-                timestamp: timestamp - Math.round(Math.random() * 86400000 * 20)
+                date: new Date(timestamp - Math.round(Math.random() * 86400000 * 20)).toISOString()
             })
         :
         output
