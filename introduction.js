@@ -169,7 +169,7 @@ const toCombinedCat = (output, cat) => ({
     name: 'Schrodinger',
     breed: 'experimental',
     age: output.age + cat.age,
-    traits: output.traits?.concat(cat.traits)
+    traits: output.traits.concat(cat.traits)
 })
 const combinedCat = colorCodedCats.reduce(toCombinedCat, { age: 0, traits: [] })
 
