@@ -165,14 +165,13 @@ const averageAge = allCats.reduce(
 renderResult(`Average cat age`, averageAge)
 
 const toCombinedCat = (output, cat) => ({
-    ...output,
     ...cat,
     name: 'Schrodinger',
     breed: 'experimental',
     age: output.age + cat.age,
     traits: output.traits?.concat(cat.traits)
 })
-const combinedCat = colorCodedCats.reduce(toCombinedCat)
+const combinedCat = colorCodedCats.reduce(toCombinedCat, { age: 0, traits: [] })
 
 renderResult('Combined super-cat', combinedCat, colorCodedCats)
 
