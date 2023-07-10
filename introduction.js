@@ -1,4 +1,5 @@
 ;(() => {
+console.log('Script start')
 
 const predefinedCats = [
     {
@@ -192,4 +193,43 @@ renderResult('Bonus: Multicolor crazyness', allCats.map(
         cat => ({...cat, cardColor: `#${Math.random().toString(16).slice(2,5)}`}))
     , allCats)
 
+console.log('Starting asynchronism code')
+
+const dropAtMyHome = orderStatus => renderResult('Cat food delivered?', orderStatus)
+getCatFood('Adult cat food', 2, dropAtMyHome)
+
+const deliveryPromise = orderCatFoodWithPromise('Adult cat food', 8)
+deliveryPromise
+    .then(result => renderResult('Got the food!', result))
+    .catch(reason => renderResult('Failed to deliver', reason))
+
+const getCatFoodPromise = (type, quantity) => new Promise((resolve, reject) => {
+    console.log('promise code start')
+    if(checkCatFoodStock(type, quantity))
+        resolve('Food delivered')
+    else
+        reject('Out of stock')
+    console.log('promise code end')
+})
+
+getCatFoodPromise('Kitten food', 8)
+    .then(result => renderResult('Got the food!', result))
+    .catch(reason => renderResult('Failed to deliver', reason))
+
+
+fetch('http://localhost:2304/cat')
+    .then(response => response.json())
+    .then(cats =>
+        renderResult('Fetch cats from local API', cats))
+
+const fetchCats = async (url, options) => {
+    const response = await fetch(url, options)
+    return response.json()
+}
+// For each?
+// Promises
+// Dates?
+// Query string
+
+console.log('Script end')
 })()

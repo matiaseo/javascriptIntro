@@ -182,8 +182,22 @@ const resultContainer = document.querySelector('.resultContainer')
 
 Object.assign(window, {
     renderResult: (title, result=[], previous=[]) => {
+        console.log('Rendering', title)
         resultContainer.insertBefore(getStepResult(title, result, previous), document.querySelector('.stepResultSectionContainer,.historyTogglerLabel'))
-    }
+    },
+    getCatFood: async (type, quantity, callback) => {
+        callback('Food delivered...')
+        await Promise.resolve()
+        callback('Calling the callback again?')
+        callback('What\'s going on?')
+    },
+    checkCatFoodStock: (type, quantity) => ({'Adult cat food': 8, 'Kitten food': 4}[type] >= quantity),
+    orderCatFoodWithPromise: (type, quantity) => new Promise((resolve, reject) => {
+        if(checkCatFoodStock(type, quantity))
+            resolve('Food delivered')
+        else
+            reject('Out of stock')
+    })
 })
 
 })()

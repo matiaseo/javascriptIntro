@@ -49,4 +49,17 @@ console.log(limitedData)
 console.log(arsusd)
 
 
+const tslaAverageSpread = shuffledData.filter(({name}) => name === 'TSLA')
+    .reduce((result, {bid, ask}, index, {length}) => result + (ask-bid)/length, 0)
+console.log(tslaAverageSpread)
+
+const convertToARS = (targetDate, {bid, ask}, {buy, sell} = arsusd.find(({date})=> targetDate.includes(date))) => ({bid: bid * buy, ask: ask * sell})
+const nvdaBidsInARS = shuffledData.filter(({name}) => name === 'NVDA')
+    .map(({date, bid, ask, name}) => ({name, date, ...convertToARS(date, {bid, ask})}))
+console.log(nvdaBidsInARS)
+
+const last10NVDAAsksInARS = shuffledData.filter(({name}) => name === 'NVDA').sort(({date:date1}, {date: date2}) => date1.localeCompare(date2))
+            .slice(-10).map(({date, ask})=> ({date, ask: convertToARS(date, {ask}).ask}))
+console.log(last10NVDAAsksInARS)
+
 })()
