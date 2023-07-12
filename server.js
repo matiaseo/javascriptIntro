@@ -18,11 +18,12 @@ const pickAtRandom = (list, count) =>
 const catTraits = [{ "name": "grumpy", "type": "annoying" }, { "name": "gracious", "type": "quiet" }, { "name": "playful", "type": "annoying" }, { "name": "impulsive", "type": "annoying" }, { "name": "sleepy", "type": "quiet" }, { "name": "fancy", "type": "quiet" }, { "name": "energized", "type": "annoying" }, { "name": "lazy", "type": "quiet" }, { "name": "prideful", "type": "annoying" }, { "name": "shy", "type": "quiet" }]
 const catBreeds = ['Aegean', 'European Shorthair', 'Balinese', 'Egyptian Mau', 'Arabian Mau', 'Highlander', 'Persian', 'Ragdoll', 'Siamese', 'Toyger']
 const catSizes = ['Big', 'Large', 'Small', 'Medium']
-const catIds = ['rV1MVEh0Af2Bm4O0','ZHrXPVRJniYPR6pp','2VgBUv9MaBwk5qnK','2bPYDRuvU70sbgja','AYJNTBAktmH3Q7ka','LTxlBUdATocntNid','MBpd0f7cDU5EwhZ9','MkRxexGVMQzEoN73','N6pTLrClzF83df8t','Rn6xqsiHb9B7qgLw','dPKnpfpGVMNgo0v1','dSC4Bs2XLcoYda45','g1LZ81LWXJwFA54p','iDrtyTcdOnAsgJzu','oBeTvAQnCC3uAL0r','qGjZXT5LuroIo8B4','u1S16RJ8tmhFgJ1J','v348KFCS15wsn8CH','0VlkBO6ValjaoeEw','18T0wqXpU3OiGrUb','4wziKEvjfJTzZ1cr','7kAJ3Huta4I97pm2','9tv4duwyYLVW7Mh8','AZbSpEWTWhEC1zm6','BHFMZUJydRxBQvQH','BT9cRBYDJp4WCjzi','CAJRBpyv9Hbe2Yuo','CFnG5UsD2WCxXJ4L','CODndL4wrdpotCAK','CVB6GXU26EYzCldX','DNSG9kP0H5HEKyh7','Hf4nZCCsXa884ILG','HrBUnl8Ee62dCTzA','PzJ1a9ff5dc3MHbu','Q6bmzUbFG2QBYd2r','TtPbFiGQtkY6dphA','WzDq91wE197vVcaQ','XnkePVQ4zPwxuTd8','Ye15Un1Dv53aXmws','ZA03c5umjj8RBIHV']
-const catImages = shuffleList(catIds).map(id => `https://cataas.com/cat/${id}?width=128&height=96`)
+const catIds = ['ZHrXPVRJniYPR6pp','2VgBUv9MaBwk5qnK','2bPYDRuvU70sbgja','AYJNTBAktmH3Q7ka','LTxlBUdATocntNid','MBpd0f7cDU5EwhZ9','MkRxexGVMQzEoN73','N6pTLrClzF83df8t','Rn6xqsiHb9B7qgLw','dPKnpfpGVMNgo0v1','dSC4Bs2XLcoYda45','g1LZ81LWXJwFA54p','iDrtyTcdOnAsgJzu','oBeTvAQnCC3uAL0r','qGjZXT5LuroIo8B4','u1S16RJ8tmhFgJ1J','v348KFCS15wsn8CH','0VlkBO6ValjaoeEw','18T0wqXpU3OiGrUb','4wziKEvjfJTzZ1cr','7kAJ3Huta4I97pm2','9tv4duwyYLVW7Mh8','AZbSpEWTWhEC1zm6','BHFMZUJydRxBQvQH','BT9cRBYDJp4WCjzi','CAJRBpyv9Hbe2Yuo','CFnG5UsD2WCxXJ4L','CODndL4wrdpotCAK','CVB6GXU26EYzCldX','DNSG9kP0H5HEKyh7','Hf4nZCCsXa884ILG','HrBUnl8Ee62dCTzA','PzJ1a9ff5dc3MHbu','Q6bmzUbFG2QBYd2r','TtPbFiGQtkY6dphA','WzDq91wE197vVcaQ','XnkePVQ4zPwxuTd8','Ye15Un1Dv53aXmws','ZA03c5umjj8RBIHV']
+const catImages = shuffleList(shuffleList(catIds)).map(id => `https://cataas.com/cat/${id}?width=128&height=96`)
 const catNames = ['Langmuir', 'Planck', 'Curie', 'Lorentz', 'Einstein', 'Langevin', 'Guye', 'Wilson', 'Richardson', 'Debye', 'Knudsen', 'Bragg', 'Kramers', 'Dirac', 'Compton', 'DeBroglie', 'Born', 'Bohr', 'Piccard', 'Henriot', 'Ehrenfest', 'Herzen', 'Donder', 'Schrodinger', 'Verschaffelt', 'Pauli', 'Heisenberg', 'Fowler', 'Brillouin']
-const cats = shuffleList(catNames).map(
+let cats = shuffleList(catNames).map(
     (name, index) => ({
+        id: getSeedFromText(name) & 0x7fffffff,
         name,
         breed: pickAtRandom(catBreeds),
         age: getRandom(1,16),
@@ -33,7 +34,9 @@ const cats = shuffleList(catNames).map(
         adopted: !getRandom(0,2)
     })
 )
-console.log(cats.map(({traits})=>traits.map(({name})=>name).sort()))
+
+if(cats.map(c=>c.id).length !== new Set(cats.map(c=>c.id)).size)
+    console.error('BAD IDS!!!')
 
 const parseQueryString = url =>
     [...url.matchAll(/(?:\?|&)(\w+=[^&]+)/g)]
@@ -45,11 +48,16 @@ const parseBody = request => new Promise(resolve => {
     request.on('data', chunk => {
             body = body.concat(chunk)
         }).on('end', () => {
-            resolve(body)
+            resolve(body&&JSON.parse(body))
         })
 })
 
-const jsonHeaders = { 'Content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+const jsonHeaders = {
+    'Content-type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    // 'Access-Control-Allow-Headers': '*'
+}
 const getOperation = method => ({
     GET: 'list',
     POST: 'create',
@@ -58,31 +66,39 @@ const getOperation = method => ({
 })[method]
 
 const handleRequest = ({ operation, resource, queryString }, body) =>
-    console.log(operation, resource, queryString, body)||
-    resource?.[operation]?.(queryString)
+    console.log(queryString, body)||
+    resource?.[operation]?.({queryString, body})
 
-const getResource = url => ({
-    cat: {
-        list: () => ({ status: 200, headers: jsonHeaders, data: cats}),
-        create: () => ({ status: 200, headers: jsonHeaders, data: {asd:1}}),
-        update: () => ({ status: 200, headers: jsonHeaders, data: {asd:1}}),
-        delete: () => ({ status: 200, headers: jsonHeaders, data: {asd:1}})
-    }
-})[url.match(/^\/([^?]+)\??/)?.[1]]
+const getResource = url => {
+    const [, resource, parameters] = url.match(/^\/([^?/]+)\/?([^?/]+)*\??/) || []
+    console.log(url, resource, parameters)
+    return ({
+        cats: parameters => {
+            const catId = +parameters
+            return {
+                list: ({ queryString: { limit=cats.length, offset=0 } }) => ({ status: 200, data: cats.slice(+offset, +offset + +limit) }),
+                create: () => ({ status: 200 }),
+                update: ({ body }) => {
+                    cats = cats.map(cat => cat.id !== catId? cat : { ...cat, ...body })
+                    return { status: 204 }
+                },
+                delete: () => ({ status: 200})
+            }
+        }
+    })[resource](parameters)
+}
 
-const parseRequest = ({ url, method }) =>
-    console.log(url, method) ||
-    ({
-        resource: getResource(url),
-        operation: getOperation(method),
-        queryString: parseQueryString(url)
-    })
+const parseRequest = ({ url, method }) => ({
+    resource: getResource(url),
+    operation: getOperation(method),
+    queryString: parseQueryString(url)
+})
 
 const addHeaders = (response, headers) =>
     (Object.entries(headers).forEach(([key, value]) => response.setHeader(key, value)), response)
 
 const requestListener = async (request, response) => {
-    const { status = 400, data, headers = jsonHeaders } =
+    const { status = request.method === 'OPTIONS'? 200 : 400, data, headers = jsonHeaders } =
         handleRequest(parseRequest(request), await parseBody(request)) ?? {}
     addHeaders(response, headers)
     response.statusCode = status

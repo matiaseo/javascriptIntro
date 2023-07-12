@@ -217,15 +217,33 @@ getCatFoodPromise('Kitten food', 8)
     .catch(reason => renderResult('Failed to deliver', reason))
 
 
-fetch('http://localhost:2304/cat')
+fetch('http://localhost:2304/cats')
     .then(response => response.json())
-    .then(cats =>
-        renderResult('Fetch cats from local API', cats))
+    .then(cats => renderResult('Fetch cats from local API', cats))
 
-const fetchCats = async (url, options) => {
-    const response = await fetch(url, options)
-    return response.json()
+
+const fetchCats = async () => {
+    const response = await fetch('http://localhost:2304/cats?limit=16')
+    const cats = await response.json()
+
+    const handleCatChange = async ({ id, adopted }, { renderCats, renderSpinner }) => {
+        renderSpinner()
+
+        await fetch(`http://localhost:2304/cats/${id}`, {
+            method: 'put',
+            body: JSON.stringify({ adopted })
+        })
+
+        const response = await fetch('http://localhost:2304/cats?limit=16')
+        const cats = await response.json()
+
+        renderCats(cats)
+    }
+
+    renderDynamicResult('Render updatable cats', cats, handleCatChange)
 }
+fetchCats()
+
 // For each?
 // Promises
 // Dates?

@@ -92,6 +92,27 @@ figure {
     gap: 16px;
     padding: 16px 0;
     justify-items: center;
+    position: relative;
+}
+
+.stepResultListContainer.loading {
+    filter: saturate(0.1) blur(1px);
+    pointer-events: none;
+}
+.stepResultListContainer.loading::after {
+    position: absolute;
+    width: 4px;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    content: "";
+    border: 32px transparent solid;
+    border-top: #dbf 32px solid;
+    border-bottom: #dbf 32px solid;
+    border-radius: 16px;
+    animation: spin .7s ease-in-out infinite;
 }
 
 .catCard {
@@ -234,8 +255,33 @@ figure {
 }
 
 
-
-
+.contextMenuContainer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    --bgColour: #1235;
+    animation: fadeInBgColour .2s ease-in forwards;
+}
+.contextMenuButton {
+    cursor: pointer;
+    position: fixed;
+    left: min(var(--menuX), calc(100vw - 565px));
+    top: var(--menuY);
+    font-weight: bolder;
+    font-size: 1.5em;
+    display: block;
+    padding: 16px 32px;
+    box-shadow: 0 0 8px 0px #e06 inset;
+    border-radius: 4px;
+    animation: backdropHueRotation 3s linear infinite;
+    transition: background-color .2s ease-in-out, box-shadow .2s ease-in-out;
+    background-color: #0002;
+}
+.contextMenuButton:hover {
+    box-shadow: 0 0 8px 0px #e06 inset, 0 0 8px 2px #abc;
+    background-color: #0007;
+    animation: backdropHueRotation .5s linear infinite;
+}
 
 ul:nth-of-type(odd) > .stepResultTitle::before {
     content: "";
@@ -252,4 +298,16 @@ ul:nth-of-type(odd) > .stepResultTitle::before {
 @keyframes blurMotion {
     25% { transform: translate(-50%, -75%); }
     to { transform: translate(25%, 0); }
+}
+@keyframes backdropHueRotation {
+    from { backdrop-filter: blur(4px) hue-rotate(0deg) }
+    to { backdrop-filter: blur(4px) hue-rotate(360deg) }
+}
+@keyframes fadeInBgColour {
+    from { background-color: #0000 }
+    to { background-color: var(--bgColour) }
+}
+@keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0) }
+    to { transform: translate(-50%, -50%) rotate(180deg) }
 }

@@ -178,12 +178,103 @@ const getStepResult = (title, result, previous) => {
     return stepContainer
 }
 
+const renderContextMenu = (buttonText, handleOk, { clientX, clientY }) => {
+    const container = Object.assign(document.createElement('div'), {
+        className: 'contextMenuContainer'
+    })
+    const button = Object.assign(document.createElement('a'), {
+        className: 'contextMenuButton',
+        textContent: buttonText
+    })
+    button.style.setProperty('--menuX', `${clientX}px`)
+    button.style.setProperty('--menuY', `${clientY}px`)
+
+    const closeMenu = event => {
+        event.stopPropagation()
+        event.preventDefault()
+        document.body.removeChild(container)
+    }
+    container.addEventListener('click', closeMenu)
+    container.addEventListener('contextmenu', closeMenu)
+    button.addEventListener('click', event => {
+        handleOk()
+        closeMenu(event)
+    })
+    container.appendChild(button)
+    document.body.appendChild(container)
+}
+
+const getDynamicStepResultContent = (result, handleCatChange) => {
+    try {
+        if(/string|number|boolean/.test(typeof result)) {
+            return getTextResult(result)
+        } else if(!([].concat(result || []))?.length) {
+            return getNoContentElement()
+        } else {
+            const stepResultListContainer = Object.assign(document.createElement('ul'), {
+                className: 'stepResultListContainer'
+            })
+            const updateResultContent = cards => {
+                stepResultListContainer.innerHTML = ''
+                stepResultListContainer.classList.remove('loading')
+                cards.forEach(catCard => stepResultListContainer.appendChild(catCard))
+            }
+            const renderSpinner = () => {
+                stepResultListContainer.classList.add('loading')
+            }
+            const renderCats = cats => updateResultContent([].concat(cats).map(cat => {
+                const catCard = toCatCard(cat)
+                catCard.addEventListener('contextmenu', event => {
+                    event.preventDefault()
+                    renderContextMenu(`Change ${cat.name}'s adoption to ${!cat.adopted}?`, () => {
+                        const updatedCat = { ...cat, adopted: !cat.adopted }
+                        handleCatChange(updatedCat, { renderCats, renderSpinner })
+                    }, event)
+                })
+                return catCard
+            }))
+            renderCats(result)
+            return stepResultListContainer
+        }
+    } catch {
+        return getNoContentElement()
+    }
+}
+const getDynamicStepResult = (title, result, handleCatChange) => {
+    const stepContainer = Object.assign(document.createElement('section'), {
+        className: 'stepResultSectionContainer'
+    })
+    const titleElement = Object.assign(document.createElement('header'), {
+        textContent: title,
+        className: 'stepResultTitle'
+    })
+    const stepResultMainContainer = Object.assign(document.createElement('main'), {
+        className: 'stepResultMainContainer'
+    })
+    const currentContainer = Object.assign(document.createElement('div'), {
+        className: 'currentContainer'
+    })
+
+    stepContainer.appendChild(titleElement)
+
+    stepResultMainContainer.appendChild(currentContainer)
+    currentContainer.appendChild(getDynamicStepResultContent(result, handleCatChange))
+
+    stepContainer.appendChild(stepResultMainContainer)
+
+    return stepContainer
+}
+
 const resultContainer = document.querySelector('.resultContainer')
 
 Object.assign(window, {
     renderResult: (title, result=[], previous=[]) => {
-        console.log('Rendering', title)
+        console.log('Rendering section:', title)
         resultContainer.insertBefore(getStepResult(title, result, previous), document.querySelector('.stepResultSectionContainer,.historyTogglerLabel'))
+    },
+    renderDynamicResult: (title, result=[], handleCatChange) => {
+        console.log('Rendering dynamic section:', title)
+        resultContainer.insertBefore(getDynamicStepResult(title, result, handleCatChange), document.querySelector('.stepResultSectionContainer,.historyTogglerLabel'))
     },
     getCatFood: async (type, quantity, callback) => {
         callback('Food delivered...')
