@@ -20,7 +20,7 @@ const catBreeds = ['Aegean', 'European Shorthair', 'Balinese', 'Egyptian Mau', '
 const catSizes = ['Big', 'Large', 'Small', 'Medium']
 const catIds = ['ZHrXPVRJniYPR6pp','2VgBUv9MaBwk5qnK','2bPYDRuvU70sbgja','AYJNTBAktmH3Q7ka','LTxlBUdATocntNid','MBpd0f7cDU5EwhZ9','MkRxexGVMQzEoN73','N6pTLrClzF83df8t','Rn6xqsiHb9B7qgLw','dPKnpfpGVMNgo0v1','dSC4Bs2XLcoYda45','g1LZ81LWXJwFA54p','iDrtyTcdOnAsgJzu','oBeTvAQnCC3uAL0r','qGjZXT5LuroIo8B4','u1S16RJ8tmhFgJ1J','v348KFCS15wsn8CH','0VlkBO6ValjaoeEw','18T0wqXpU3OiGrUb','4wziKEvjfJTzZ1cr','7kAJ3Huta4I97pm2','9tv4duwyYLVW7Mh8','AZbSpEWTWhEC1zm6','BHFMZUJydRxBQvQH','BT9cRBYDJp4WCjzi','CAJRBpyv9Hbe2Yuo','CFnG5UsD2WCxXJ4L','CODndL4wrdpotCAK','CVB6GXU26EYzCldX','DNSG9kP0H5HEKyh7','Hf4nZCCsXa884ILG','HrBUnl8Ee62dCTzA','PzJ1a9ff5dc3MHbu','Q6bmzUbFG2QBYd2r','TtPbFiGQtkY6dphA','WzDq91wE197vVcaQ','XnkePVQ4zPwxuTd8','Ye15Un1Dv53aXmws','ZA03c5umjj8RBIHV']
 const catImages = shuffleList(shuffleList(catIds)).map(id => `https://cataas.com/cat/${id}?width=128&height=96`)
-const catNames = ['Langmuir', 'Planck', 'Curie', 'Lorentz', 'Einstein', 'Langevin', 'Guye', 'Wilson', 'Richardson', 'Debye', 'Knudsen', 'Bragg', 'Kramers', 'Dirac', 'Compton', 'DeBroglie', 'Born', 'Bohr', 'Piccard', 'Henriot', 'Ehrenfest', 'Herzen', 'Donder', 'Schrodinger', 'Verschaffelt', 'Pauli', 'Heisenberg', 'Fowler', 'Brillouin']
+const catNames = ['Langmuir', 'Planck', 'Curie', 'Lorentz', 'Einstein', 'Langevin', 'Guye', 'Wilson', 'Richardson', 'Debye', 'Knudsen', 'Bragg', 'Kramers', 'Dirac', 'Compton', 'DeBroglie', 'Born', 'Bohr', 'Piccard', 'Henriot', 'Ehrenfest', 'Herzen', 'Donder', /* 'Schrodinger',  */'Verschaffelt', 'Pauli', 'Heisenberg', 'Fowler', 'Brillouin']
 let cats = shuffleList(catNames).map(
     (name, index) => ({
         id: getSeedFromText(name) & 0x7fffffff,
@@ -74,15 +74,31 @@ const getResource = url => {
     console.log(url, resource, parameters)
     return ({
         cats: parameters => {
-            const catId = +parameters
+            const catId = parameters
             return {
-                list: ({ queryString: { limit=cats.length, offset=0 } }) => ({ status: 200, data: cats.slice(+offset, +offset + +limit) }),
-                create: () => ({ status: 200 }),
+                list: ({ queryString: { limit=cats.length, offset=0 } }) => {
+                    const cat = catId && cats.find(({id})=> catId == id)
+                    return {
+                        status: catId && !cat? 404 : 200,
+                        data: catId? cat : cats.slice(+offset, +offset + +limit)
+                    }
+                },
+                create: ({ body: { name, ...restOfTheCat } }) => {
+                    // if(cats.find(cat => cat.name === name))
+                    //     return { status: 400, data: { error: 'duplicated name' } }
+                    const id = getSeedFromText(name) & 0x7fffffff
+                    const newCat = { id, name, ...restOfTheCat }
+                    cats = cats.concat(newCat)
+                    return { status: 201, data: { id } }
+                },
                 update: ({ body }) => {
-                    cats = cats.map(cat => cat.id !== catId? cat : { ...cat, ...body })
+                    cats = cats.map(cat => cat.id != catId? cat : { ...cat, ...body })
                     return { status: 204 }
                 },
-                delete: () => ({ status: 200})
+                delete: () => {
+                    cats = cats.filter(({ id }) => id != catId)
+                    return { status: 204 }
+                }
             }
         }
     })[resource](parameters)
@@ -110,3 +126,16 @@ createServer(requestListener)
 
 // To run this with auto restart on crash:
 // while true; do node server.js; done
+
+// cats resource endpoints:
+//
+// * http://localhost:2304/cats
+//      GET: list all cats
+//          query parameters: limit, offset
+//      POST: create
+//          request body: all cat properties, except id
+// * http://localhost:2304/cats/{id}
+//      GET: Get that specific cat
+//      PUT: Update the cat
+//          request body: properties to replace
+//      DELETE: Delete the cat

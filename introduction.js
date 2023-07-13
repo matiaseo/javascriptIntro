@@ -217,7 +217,7 @@ getCatFoodPromise('Kitten food', 8)
     .catch(reason => renderResult('Failed to deliver', reason))
 
 
-fetch('http://localhost:2304/cats')
+fetch('http://localhost:2304/cats?limit=8')
     .then(response => response.json())
     .then(cats => renderResult('Fetch cats from local API', cats))
 
@@ -225,29 +225,63 @@ fetch('http://localhost:2304/cats')
 const fetchCats = async () => {
     const response = await fetch('http://localhost:2304/cats?limit=16')
     const cats = await response.json()
-
-    const handleCatChange = async ({ id, adopted }, { renderCats, renderSpinner }) => {
-        renderSpinner()
-
-        await fetch(`http://localhost:2304/cats/${id}`, {
-            method: 'put',
-            body: JSON.stringify({ adopted })
-        })
-
-        const response = await fetch('http://localhost:2304/cats?limit=16')
-        const cats = await response.json()
-
-        renderCats(cats)
-    }
-
-    renderDynamicResult('Render updatable cats', cats, handleCatChange)
+    return cats
 }
-fetchCats()
 
-// For each?
-// Promises
-// Dates?
-// Query string
+const updateCat = ({ id, adopted }) =>
+    fetch(`http://localhost:2304/cats/${id}`, {
+        method: 'put',
+        body: JSON.stringify({ adopted })
+    })
+
+const handleCatChange = async cat => {
+    await updateCat(cat)
+    return fetchCats()
+}
+
+fetchCats()
+    .then(cats => renderDynamicResult('Render updatable cats', cats, handleCatChange))
+
+
+const createCat = async cat => {
+    const response = await fetch('http://localhost:2304/cats', {
+        method: 'post',
+        body: JSON.stringify(cat)
+    })
+    return response.json()
+}
+
+const fetchCat = async id => {
+    const response = await fetch(`http://localhost:2304/cats/${id}`)
+    return response.json()
+}
+
+const deleteCat = id =>
+    fetch(`http://localhost:2304/cats/${id}`, {
+        method: 'delete'
+    })
+
+createCat(deduplicatedCombinedCat)
+    .then(({ id }) => fetchCat(id))
+    .then(cat => renderResult('Fetch new cat', cat))
+    
+
+const fetchAllCats = async () => {
+    const response = await fetch('http://localhost:2304/cats')
+    return response.json()
+}
+        
+fetchAllCats()
+    .then(cats => {
+        renderResult('Fetch all cats', cats)
+        return cats
+    })
+    .then(cats => {
+        const { id } = cats.find(({ name }) => name === 'Schrodinger')
+        return deleteCat(id)
+    })
+    .then(fetchAllCats)
+    .then(cats => renderResult('Fetch all cats after deleting Schrodinger', cats))
 
 console.log('Script end')
 })()

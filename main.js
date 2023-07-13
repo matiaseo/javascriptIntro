@@ -223,12 +223,15 @@ const getDynamicStepResultContent = (result, handleCatChange) => {
                 stepResultListContainer.classList.add('loading')
             }
             const renderCats = cats => updateResultContent([].concat(cats).map(cat => {
+                console.log('Render dynamic section cats')
                 const catCard = toCatCard(cat)
                 catCard.addEventListener('contextmenu', event => {
                     event.preventDefault()
                     renderContextMenu(`Change ${cat.name}'s adoption to ${!cat.adopted}?`, () => {
                         const updatedCat = { ...cat, adopted: !cat.adopted }
-                        handleCatChange(updatedCat, { renderCats, renderSpinner })
+                        renderSpinner()
+                        handleCatChange(updatedCat)
+                            .then(renderCats)
                     }, event)
                 })
                 return catCard
