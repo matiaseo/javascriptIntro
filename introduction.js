@@ -199,9 +199,10 @@ const dropAtMyHome = orderStatus => renderResult('Cat food delivered?', orderSta
 getCatFood('Adult cat food', 2, dropAtMyHome)
 
 const deliveryPromise = orderCatFoodWithPromise('Adult cat food', 8)
-deliveryPromise
-    .then(result => renderResult('Got the food!', result))
-    .catch(reason => renderResult('Failed to deliver', reason))
+
+deliveryPromise // Pending
+    .then(result => renderResult('Got the food!', result)) // Fulfilled
+    .catch(reason => renderResult('Adult food order cancelled', reason)) // Rejected
 
 const getCatFoodPromise = (type, quantity) => new Promise((resolve, reject) => {
     console.log('promise code start')
@@ -209,12 +210,14 @@ const getCatFoodPromise = (type, quantity) => new Promise((resolve, reject) => {
         resolve('Food delivered')
     else
         reject('Out of stock')
+    reject('Out of stock 2')
+    resolve('Out of stock 3')
     console.log('promise code end')
 })
 
 getCatFoodPromise('Kitten food', 8)
-    .then(result => renderResult('Got the food!', result))
-    .catch(reason => renderResult('Failed to deliver', reason))
+    .then(result => renderResult('Got the kitten food!', result))
+    .catch(reason => renderResult('Kitten food order cancelled', reason))
 
 
 fetch('http://localhost:2304/cats?limit=8')
@@ -223,15 +226,33 @@ fetch('http://localhost:2304/cats?limit=8')
 
 
 const fetchCats = async () => {
+    console.log('Async function start')
     const response = await fetch('http://localhost:2304/cats?limit=16')
     const cats = await response.json()
+    console.log('Async function end')
     return cats
 }
 
-const updateCat = ({ id, adopted }) =>
+
+const createCat = cat =>
+    fetch('http://localhost:2304/cats', {
+        method: 'post',
+        body: JSON.stringify(cat)
+    }).then(response => response.json())
+
+const fetchCat = id =>
+    fetch(`http://localhost:2304/cats/${id}`)
+        .then(response => response.json())
+
+createCat(deduplicatedCombinedCat)
+    .then(({ id }) => fetchCat(id))
+    .then(cat => renderResult('Fetch new cat', cat))
+
+
+const updateCat = ({ id, ...otherProperties }) =>
     fetch(`http://localhost:2304/cats/${id}`, {
         method: 'put',
-        body: JSON.stringify({ adopted })
+        body: JSON.stringify({ ...otherProperties })
     })
 
 const handleCatChange = async cat => {
@@ -242,46 +263,22 @@ const handleCatChange = async cat => {
 fetchCats()
     .then(cats => renderDynamicResult('Render updatable cats', cats, handleCatChange))
 
-
-const createCat = async cat => {
-    const response = await fetch('http://localhost:2304/cats', {
-        method: 'post',
-        body: JSON.stringify(cat)
-    })
-    return response.json()
-}
-
-const fetchCat = async id => {
-    const response = await fetch(`http://localhost:2304/cats/${id}`)
-    return response.json()
-}
-
 const deleteCat = id =>
     fetch(`http://localhost:2304/cats/${id}`, {
         method: 'delete'
     })
 
-createCat(deduplicatedCombinedCat)
-    .then(({ id }) => fetchCat(id))
-    .then(cat => renderResult('Fetch new cat', cat))
-    
+const fetchAllCats = () =>
+    fetch('http://localhost:2304/cats')
+        .then(response => response.json())
 
-const fetchAllCats = async () => {
-    const response = await fetch('http://localhost:2304/cats')
-    return response.json()
-}
-        
-fetchAllCats()
-    .then(cats => {
-        renderResult('Fetch all cats', cats)
-        return cats
-    })
-    .then(cats => {
-        const { id } = cats.find(({ name }) => name === 'Schrodinger')
-        return deleteCat(id)
-    })
-    .then(fetchAllCats)
-    .then(cats => renderResult('Fetch all cats after deleting Schrodinger', cats))
+;(async () => {
+    const beforeCats = await fetchAllCats()
+    const { id } = beforeCats.find(({ name }) => name === 'Schrodinger')
+    await deleteCat(id)
+    const afterCats = await fetchAllCats()
+    renderResult('All cats before/after deleting Schrodinger', afterCats, beforeCats)
+})()
 
 console.log('Script end')
 })()
